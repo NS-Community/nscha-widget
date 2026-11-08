@@ -1,5 +1,5 @@
-// Local development entry point. Production on Vercel uses api/index.ts,
-// where the platform serves public/ as static files and routes the four API
+// Local development entry point. Production on Vercel uses api/[...path].ts,
+// where the platform serves public/ as static files and routes the five API
 // paths to the same Hono app via vercel.json rewrites.
 import 'dotenv/config'
 import { serve } from '@hono/node-server'

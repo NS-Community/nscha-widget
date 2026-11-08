@@ -1,17 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
   "buildCommand": "pnpm build",
   "outputDirectory": "public",
   "functions": {
-    "api/index.ts": {
+    "api/[...path].ts": {
       "maxDuration": 10
     }
   },
   "rewrites": [
-    { "source": "/challenge", "destination": "/api/index" },
-    { "source": "/redeem", "destination": "/api/index" },
-    { "source": "/verify", "destination": "/api/index" },
-    { "source": "/config", "destination": "/api/index" },
-    { "source": "/health", "destination": "/api/index" }
+    { "source": "/challenge", "destination": "/api/challenge" },
+    { "source": "/redeem", "destination": "/api/redeem" },
+    { "source": "/verify", "destination": "/api/verify" },
+    { "source": "/config", "destination": "/api/config" },
+    { "source": "/health", "destination": "/api/health" }
   ]
 }

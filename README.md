@@ -129,8 +129,9 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 
 1. 点 Deploy / Import，Vercel 会从公开仓库克隆一份到你自己的账号。
 2. 环境变量填 `CAP_SECRET`，建议再填 `ALLOWED_ORIGIN` 收敛到你自己的域名。
-3. Build Command 用 `pnpm build`，Output Directory 用 `public`，其余保持默认。
-   `vercel.json` 已把五个 API 路径（含 `/health`）重写到 `api/index.ts`。
+3. Build Command 用 `pnpm build`，Output Directory 用 `public`，Framework Preset 选 **Other**（`vercel.json` 里已固定为 `framework: null`），其余保持默认。
+   `vercel.json` 已把五个 API 路径（含 `/health`）重写到 catch-all 函数 `api/[...path].ts`。
+   ⚠️ 不要选 Hono / 后端框架 preset：那会让构建器在 `public/` 里找 `src/app.ts` 之类的 server 入口，报 `No entrypoint found in output directory`。
 4. 部署完成后依次确认：`/health` 返回 `{"ok":true,...}`、`/widget.js` 可访问、
    用页面预览卡跑一次真实求解并让 `/verify` 返回 200。
 
@@ -143,7 +144,7 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ## 结构
 
 ```
-api/index.ts              Vercel Serverless 入口（一个函数服务五个路径）
+api/[...path].ts           Vercel Serverless 入口（catch-all，一个函数服务五个路径）
 src/app.ts                HTTP 路由、CORS、统一错误
 src/protocol.ts           挑战 / 兑换 / 校验，无状态核心
 src/server.ts             本地 Node 入口 + 静态托管
