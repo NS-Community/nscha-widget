@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm build",
+  "functions": {
+    "api/index.ts": {
+      "runtime": "nodejs",
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    { "source": "/challenge", "destination": "/api/index" },
+    { "source": "/redeem", "destination": "/api/index" },
+    { "source": "/verify", "destination": "/api/index" },
+    { "source": "/config", "destination": "/api/index" }
+  ]
+}

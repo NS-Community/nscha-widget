@@ -1,0 +1,26 @@
+NSCHA widget — 随仓库附带的浏览器端资源
+=========================================
+
+public/nscha-solver.js
+  来源：@cap.js/widget（版本见 package.json）
+  许可：Apache-2.0，原始 LICENSE 见该 npm 包根目录。
+  用途：在 Web Worker 中驱动工作量证明求解。以 invisible 模式运行，
+        不渲染上游组件界面，页面上显示的盒子由 public/widget.js 自绘。
+
+public/cap/cap_wasm_bg.wasm
+public/cap/hashwx.wasm
+  来源：@cap.js/wasm
+  许可：Apache-2.0。
+
+public/cap/pako_inflate.min.js
+  来源：pako
+  许可：MIT。仅在浏览器缺少 DecompressionStream 且挑战带 instrumentation
+        时才会加载；本服务不启用 instrumentation，但地址仍指向本站，
+        以保证「零第三方域名请求」是无条件的。
+
+以上文件由 `pnpm build`（scripts/sync-solver.mjs）从 node_modules 同步，
+提交进仓库是为了让一份新 clone 无需构建即可直接托管。升级版本后重新运行
+`pnpm build` 并一并提交，即可保持可复现。
+
+服务端依赖 capjs-core / hono 由 npm 安装，其各自许可证随包附带，不进入
+浏览器产物。
