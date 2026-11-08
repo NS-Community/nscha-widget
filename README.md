@@ -4,7 +4,9 @@
 
 无追踪、无第三方域名请求、无数据库、无共享存储。挑战是进程内签发的 HS256 令牌，验证是纯密码学，因此整个服务可以跑在一个 Vercel Serverless Function 里。
 
-> 这份仓库是「可部署物」本身。文档站 `E:/nscha-docs` 解释协议，`gamesense` 论坛是第一个使用方；本仓库负责让别人也能拿到同一个组件。
+> 这份仓库是「可部署物」本身，源码公开在 [NS-Community/nscha-widget](https://github.com/NS-Community/nscha-widget)。
+> 文档站在 [NS-Community/nscha-docs](https://github.com/NS-Community/nscha-docs)（线上 `https://nscha.nsbbs.eu.cc`）解释协议，
+> `gamesense` 论坛是第一个使用方；本仓库负责让别人也能拿到同一个组件。
 
 ---
 
@@ -122,19 +124,26 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 
 ## 部署到 Vercel
 
-1. 把本仓库推到 GitHub（私有即可），在 Vercel 里 Import。推送后把 `public/index.html` 里两个 Deploy 按钮的 `repository-url` 换成你自己的仓库地址 —— 默认值 `NS-Community/nscha-widget` 只是占位，仓库尚未创建时按钮不会生效。
-2. 环境变量填 `CAP_SECRET`，建议再填 `ALLOWED_ORIGIN` 收敛到你自己的域名。
-3. Build Command 用 `pnpm build`，其余保持默认。`vercel.json` 已把四个 API 路径重写到 `api/index.ts`，`public/` 由平台静态托管。
-4. 部署完成后，`https://<你的项目>.vercel.app/widget.js` 就是可嵌入的脚本地址。
+部署页 `public/index.html` 上两个 Deploy 按钮已经指向本仓库的真实地址
+`https://github.com/NS-Community/nscha-widget`（公开仓库，克隆无需授权）。也可以直接在 Vercel 里 Import 同一个仓库。
 
-文档站是独立的 Docusaurus 静态站（`pnpm build` → `build/`），同样可以直接托管到 Vercel，两者互不影响：文档站不需要服务端，验证服务不需要数据库。
+1. 点 Deploy / Import，Vercel 会从公开仓库克隆一份到你自己的账号。
+2. 环境变量填 `CAP_SECRET`，建议再填 `ALLOWED_ORIGIN` 收敛到你自己的域名。
+3. Build Command 用 `pnpm build`，Output Directory 用 `public`，其余保持默认。
+   `vercel.json` 已把五个 API 路径（含 `/health`）重写到 `api/index.ts`。
+4. 部署完成后依次确认：`/health` 返回 `{"ok":true,...}`、`/widget.js` 可访问、
+   用页面预览卡跑一次真实求解并让 `/verify` 返回 200。
+
+文档站是独立的 Docusaurus 静态站（[NS-Community/nscha-docs](https://github.com/NS-Community/nscha-docs)，
+`pnpm build` → `build/`），同样可以直接托管到 Vercel，两者互不影响：
+文档站不需要服务端，验证服务不需要数据库。
 
 ---
 
 ## 结构
 
 ```
-api/index.ts              Vercel Serverless 入口（一个函数服务四个路径）
+api/index.ts              Vercel Serverless 入口（一个函数服务五个路径）
 src/app.ts                HTTP 路由、CORS、统一错误
 src/protocol.ts           挑战 / 兑换 / 校验，无状态核心
 src/server.ts             本地 Node 入口 + 静态托管
